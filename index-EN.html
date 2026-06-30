@@ -559,6 +559,19 @@
       color: var(--blue);
     }
 
+    .validation-note {
+      margin-top: 24px;
+      padding: 22px 24px;
+      border-radius: 20px;
+      background: rgba(15, 92, 255, 0.07);
+      border: 1px solid rgba(15, 92, 255, 0.18);
+      color: rgba(7, 20, 38, 0.84);
+    }
+
+    .validation-note strong {
+      color: var(--navy);
+    }
+
     .use-title {
       text-align: center;
       max-width: 960px;
@@ -1107,6 +1120,14 @@
               The full validation methodology is available upon request
               for qualified organizations.
             </p>
+
+            <div class="validation-note">
+              <strong>Methodological note:</strong> not every low Earth orbit object can be used as a
+              reliable reference. In some operational databases, when there is no verifiable telemetry at
+              the last captured point, zero values or filler parameters are assigned that do not reflect the
+              actual reading. For that reason, the 11 selected events correspond only to cases with complete,
+              verifiable and as pure as possible telemetry, suitable for rigorous retrospective validation.
+            </div>
           </div>
 
           <div class="metric-box">
