@@ -607,34 +607,138 @@
       align-items: start;
     }
 
-    form {
-      display: grid;
-      gap: 18px;
+    .cta-form-card {
+      background: rgba(255,255,255,0.97);
+      color: var(--navy);
+      padding: 34px;
+      border-radius: 30px;
+      box-shadow: 0 28px 70px rgba(0,0,0,0.22);
     }
 
-    input, select, textarea {
+    .cta-form-card h3 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      line-height: 1.15;
+    }
+
+    .cta-form-card p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: rgba(7,20,38,0.78);
+      margin-bottom: 22px;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
       width: 100%;
-      padding: 18px 20px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.08);
-      color: var(--white);
+      border: 1px solid rgba(7,20,38,0.14);
+      border-radius: 16px;
+      background: #fff;
+      color: var(--navy);
+      padding: 14px 15px;
+      font: inherit;
       font-size: 16px;
       outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    input::placeholder,
-    textarea::placeholder {
-      color: rgba(255,255,255,0.55);
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: rgba(15,92,255,0.65);
+      box-shadow: 0 0 0 4px rgba(15,92,255,0.12);
     }
 
-    select {
-      color: rgba(255,255,255,0.85);
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: rgba(7,20,38,0.42);
     }
 
-    textarea {
+    .field select {
+      color: rgba(7,20,38,0.88);
+    }
+
+    .field textarea {
       min-height: 150px;
       resize: vertical;
+    }
+
+    .form-consent {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 13px;
+      color: rgba(7,20,38,0.78);
+      line-height: 1.45;
+      margin-top: 6px;
+    }
+
+    .form-consent input {
+      width: auto;
+      margin-top: 3px;
+      accent-color: var(--blue);
+    }
+
+    .form-consent a {
+      color: var(--navy);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .cta-form-card .btn-primary {
+      background: var(--navy);
+      color: var(--white);
+      border-color: var(--navy);
+    }
+
+    .cta-form-card .btn-primary:hover {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: var(--white);
+    }
+
+    .form-status {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(7,20,38,0.68);
+    }
+
+    .form-note {
+      font-size: 13px;
+      color: rgba(7,20,38,0.62);
+      margin-top: 4px;
     }
 
     /* Footer */
@@ -698,6 +802,10 @@
 
       .cards,
       .data-list {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
         grid-template-columns: 1fr;
       }
 
@@ -1181,25 +1289,103 @@
           </p>
         </div>
 
-        <form>
-          <input type="text" placeholder="Nombre" required />
-          <input type="email" placeholder="Email corporativo" required />
-          <input type="text" placeholder="Organización" />
-          <input type="text" placeholder="Cargo" />
+        <div class="cta-form-card">
+          <h3>Solicita información estratégica</h3>
+          <p>
+            Completa el formulario y preparamos la conversación adecuada para evaluación
+            técnica, validación, integración, licenciamiento o colaboración institucional.
+          </p>
 
-          <select required>
-            <option value="">Interés principal</option>
-            <option>Reentrada orbital</option>
-            <option>SDA / Defensa</option>
-            <option>Seguros aeroespaciales</option>
-            <option>Infraestructura crítica</option>
-            <option>Investigación / Otro</option>
-          </select>
+          <form class="contact-form" id="contact-form">
+            <div class="form-row">
+              <div class="field">
+                <label for="contact-name">Nombre</label>
+                <input id="contact-name" name="name" autocomplete="name" required />
+              </div>
 
-          <textarea placeholder="Mensaje"></textarea>
+              <div class="field">
+                <label for="contact-company">Organización</label>
+                <input id="contact-company" name="company" autocomplete="organization" required />
+              </div>
+            </div>
 
-          <button type="submit" class="btn btn-primary">Enviar solicitud</button>
-        </form>
+            <div class="form-row">
+              <div class="field">
+                <label for="contact-email">Email</label>
+                <input id="contact-email" name="email" type="email" autocomplete="email" required />
+              </div>
+
+              <div class="field">
+                <label for="contact-phone">Teléfono</label>
+                <input
+                  id="contact-phone"
+                  name="phone"
+                  type="tel"
+                  autocomplete="tel"
+                  placeholder="+__"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="contact-sector">Sector</label>
+                <select id="contact-sector" name="sector" required>
+                  <option value="" selected disabled>Selecciona una opción</option>
+                  <option value="espacial">Operador espacial / Satelital</option>
+                  <option value="defensa">Defensa / SDA</option>
+                  <option value="seguros">Seguros aeroespaciales</option>
+                  <option value="infraestructura">Infraestructura crítica</option>
+                  <option value="gobierno">Gobierno / Regulación</option>
+                  <option value="investigacion">Investigación / Academia</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="contact-interest">Interés</label>
+                <select id="contact-interest" name="interest" required>
+                  <option value="" selected disabled>Selecciona una opción</option>
+                  <option value="whitepaper">Acceso a whitepaper</option>
+                  <option value="evaluacion">Evaluación técnica</option>
+                  <option value="integracion">Explorar integración</option>
+                  <option value="licenciamiento">Explorar licenciamiento</option>
+                  <option value="colaboracion">Colaboración estratégica</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="contact-message">Mensaje</label>
+              <textarea
+                id="contact-message"
+                name="message"
+                required
+                placeholder="Comparte tu caso de uso, horizonte de evaluación, tipo de organización o el nivel de acceso técnico que necesitas."
+              ></textarea>
+            </div>
+
+            <div class="form-consent">
+              <input id="contact-privacy" name="privacy" type="checkbox" value="accepted" required />
+              <label for="contact-privacy">
+                He leído y acepto el <a href="privacidad.html">aviso de privacidad</a> y autorizo
+                el tratamiento de mis datos para dar seguimiento a esta solicitud.
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Enviar solicitud</button>
+              <span class="form-status" id="contact-status" aria-live="polite"></span>
+            </div>
+
+            <div class="form-note">
+              El formulario valida tu solicitud y deja listo el siguiente paso para integrarlo
+              con el canal oficial de contacto de ORBIT JK.
+            </div>
+          </form>
+        </div>
       </div>
     </section>
 
@@ -1313,13 +1499,22 @@
       initLang("langSwitcherMobile", "langToggleMobile", "langMenuMobile");
     })();
 
-    const form = document.querySelector("form");
+    (function () {
+      var form = document.getElementById("contact-form");
+      var status = document.getElementById("contact-status");
 
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      alert("Solicitud enviada. Gracias por contactar a ORBIT JK.");
-      form.reset();
-    });
+      if (!form) return;
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (status) {
+          status.textContent = "Solicitud preparada. Falta conectar el canal final de envío.";
+        }
+
+        form.reset();
+      });
+    })();
   </script>
 
 </body>
