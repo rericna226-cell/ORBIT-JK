@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ORBIT JK | Inteligencia Orbital Determinista</title>
+
+  <style>
+    :root {
+      --blue: #0f5cff;
+      --blue-dark: #0b347f;
+      --navy: #071426;
+      --navy-2: #0a1933;
+      --black: #020203;
+      --white: #ffffff;
+      --gray: #cfd6e6;
+      --soft: #f2f3f5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: min(1180px, 90%);
+      margin: 0 auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 32px;
+      border-radius: 999px;
+      border: 1px solid var(--white);
+      font-size: 15px;
+      transition: 0.25s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--blue);
+      color: var(--white);
+      border-color: var(--blue);
+    }
+
+    .btn-secondary:hover {
+      background: var(--white);
+      color: var(--black);
+    }
+
+    .section {
+      padding: 120px 0;
+    }
+
+    .section-dark {
+      background: var(--black);
+    }
+
+    .section-navy {
+      background: var(--navy);
+    }
+
+    .section-blue {
+      background: var(--blue-dark);
+    }
+
+    .section-light {
+      background: var(--soft);
+      color: var(--navy);
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      font-size: 12px;
+      color: var(--gray);
+      margin-bottom: 20px;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.05;
+      font-weight: 800;
+    }
+
+    h1 {
+      font-size: clamp(48px, 7vw, 108px);
+      letter-spacing: -0.05em;
+    }
+
+    h2 {
+      font-size: clamp(40px, 5.5vw, 82px);
+      letter-spacing: -0.045em;
+    }
+
+    h3 {
+      font-size: clamp(24px, 3vw, 34px);
+      letter-spacing: -0.025em;
+    }
+
+    p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.82);
+    }
+
+    .section-light p {
+      color: rgba(7,20,38,0.78);
+    }
+
+    .blue-text {
+      color: var(--blue);
+    }
+
+    /* Header */
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      background: rgba(2,2,3,0.55);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.06em;
+    }
+
+    .logo span {
+      color: var(--blue);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      font-size: 14px;
+      color: rgba(255,255,255,0.82);
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+    }
+
+    .lang-switcher {
+      position: relative;
+      margin-left: 18px;
+    }
+
+    .lang-switcher.mobile-header {
+      display: none;
+      margin-left: auto;
+      margin-right: 10px;
+    }
+
+    .lang {
+      appearance: none;
+      height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.08);
+      color: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+    }
+
+    .lang-caret {
+      color: rgba(255,255,255,0.68);
+      font-size: 12px;
+      transition: transform 0.15s ease;
+    }
+
+    .lang-switcher.open .lang-caret {
+      transform: rotate(180deg);
+    }
+
+    .lang-menu {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      min-width: 180px;
+      padding: 8px;
+      border-radius: 18px;
+      border: 1px solid rgba(12,20,34,0.12);
+      background: rgba(255,255,255,0.98);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+      display: grid;
+      gap: 6px;
+      z-index: 110;
+    }
+
+    .lang-menu a {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-radius: 14px;
+      color: #0c1422;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      background: transparent;
+    }
+
+    .lang-menu a:hover,
+    .lang-menu a.active {
+      background: rgba(12,20,34,0.04);
+      border-color: rgba(12,20,34,0.06);
+    }
+
+    .nav-cta {
+      padding: 10px 20px;
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 999px;
+    }
+
+    .nav-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.08);
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      flex-direction: column;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .nav-toggle span {
+      width: 20px;
+      height: 2px;
+      background: rgba(255,255,255,0.92);
+      border-radius: 999px;
+      display: block;
+    }
+
+    .mobile-backdrop[hidden],
+    .mobile-menu[hidden],
+    .lang-menu[hidden] {
+      display: none;
+    }
+
+    .mobile-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(2px);
+      z-index: 90;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 88px;
+      left: 14px;
+      right: 14px;
+      background: rgba(7,20,38,0.98);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      box-shadow: 0 28px 90px rgba(0,0,0,0.3);
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      z-index: 95;
+    }
+
+    .mobile-menu a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 15px;
+      color: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .mobile-menu a.mobile-cta {
+      background: #fff;
+      color: #071426;
+      border-color: #fff;
+    }
+
+    /* Hero */
+
+    .hero {
+      min-height: 100vh;
+      padding-top: 120px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.95)),
+        url("https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=2400&q=80");
+      background-size: cover;
+      background-position: center;
+      text-align: center;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 42%, rgba(15,92,255,0.22), transparent 32%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: min(980px, 90%);
+      margin: 0 auto;
+    }
+
+    .hero-logo {
+      font-size: clamp(64px, 10vw, 150px);
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      margin-bottom: 18px;
+    }
+
+    .hero-logo span {
+      color: var(--blue);
+    }
+
+    .hero-sub {
+      width: min(760px, 100%);
+      margin: 30px auto 44px;
+      font-size: clamp(18px, 2vw, 22px);
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    /* Split */
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+      align-items: center;
+    }
+
+    .split-image {
+      min-height: 620px;
+      background: url("https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1600&q=80");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .split-text p {
+      margin-top: 28px;
+      max-width: 620px;
+    }
+
+    /* Cards */
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 70px;
+    }
+
+    .cards.four {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      padding: 42px 34px;
+      min-height: 230px;
+    }
+
+    .section-light .card {
+      background: #e7e9ec;
+      border: 1px solid rgba(7,20,38,0.05);
+    }
+
+    .card h3 {
+      margin-bottom: 22px;
+    }
+
+    .card p {
+      font-size: 17px;
+    }
+
+    /* Problem */
+
+    .problem-title {
+      max-width: 850px;
+      margin-bottom: 40px;
+    }
+
+    .big-statement {
+      font-size: clamp(42px, 6vw, 90px);
+      color: var(--blue);
+      max-width: 760px;
+      margin-bottom: 40px;
+    }
+
+    .two-col-text {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      margin-top: 90px;
+    }
+
+    /* Tech */
+
+    .tech-intro {
+      max-width: 780px;
+    }
+
+    #tecnologia .container {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 72px;
+      align-items: start;
+    }
+
+    #tecnologia .cards.four {
+      margin-top: 0;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 26px 34px;
+    }
+
+    #tecnologia .card {
+      background: transparent;
+      border: 0;
+      border-top: 1px solid rgba(7,20,38,0.12);
+      border-radius: 0;
+      padding: 22px 0 0;
+      min-height: 0;
+    }
+
+    #tecnologia .card h3 {
+      margin-bottom: 14px;
+      font-size: clamp(22px, 2.3vw, 30px);
+    }
+
+    #tecnologia .card p {
+      max-width: 28ch;
+    }
+
+    .data-list {
+      margin-top: 60px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+    }
+
+    .data-item {
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      font-weight: 700;
+    }
+
+    /* Visualization */
+
+    .timeline {
+      margin-top: 80px;
+      border-top: 1px solid rgba(255,255,255,0.45);
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 0.8fr 1.4fr;
+      gap: 80px;
+      padding: 42px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.45);
+    }
+
+    .timeline-row h3 {
+      color: var(--white);
+    }
+
+    /* Validation */
+
+    .validation-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+      margin-top: 70px;
+    }
+
+    .metric-box {
+      background: var(--black);
+      color: var(--white);
+      border-radius: 30px;
+      padding: 46px;
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      font-size: 17px;
+    }
+
+    .metric strong {
+      color: var(--blue);
+    }
+
+    /* Use cases */
+
+    .use-title {
+      text-align: center;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .use-title p {
+      margin-top: 26px;
+    }
+
+    /* CTA */
+
+    .cta {
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      background:
+        linear-gradient(to bottom, rgba(7,20,38,0.35), rgba(7,20,38,0.98)),
+        url("https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=2200&q=80");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .cta p {
+      max-width: 720px;
+      margin: 30px auto 44px;
+    }
+
+    /* Contact */
+
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    form {
+      display: grid;
+      gap: 18px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 18px 20px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+      font-size: 16px;
+      outline: none;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(255,255,255,0.55);
+    }
+
+    select {
+      color: rgba(255,255,255,0.85);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    /* Footer */
+
+    footer {
+      background: var(--blue-dark);
+      padding: 70px 0;
+      color: var(--white);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      text-decoration: underline;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .copyright {
+      margin-top: 50px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* Responsive */
+
+    @media (max-width: 960px) {
+      .nav-links,
+      .lang-switcher:not(.mobile-header) {
+        display: none;
+      }
+
+      .lang-switcher.mobile-header {
+        display: block;
+      }
+
+      .lang-switcher.mobile-header .lang {
+        border-radius: 12px;
+      }
+
+      .nav-toggle {
+        display: inline-flex;
+      }
+
+      #tecnologia .container,
+      .split,
+      .two-col-text,
+      .validation-grid,
+      .contact-wrap,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cards,
+      .data-list {
+        grid-template-columns: 1fr;
+      }
+
+      #tecnologia .cards.four {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        margin-top: 42px;
+      }
+
+      .timeline-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .split-image {
+        min-height: 420px;
+      }
+
+      .section {
+        padding: 90px 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container nav">
+      <a href="#inicio" class="logo">Orbit<span>JK</span></a>
+
+      <nav class="nav-links">
+        <a href="#inicio">Inicio</a>
+        <a href="#panorama">Panorama actual</a>
+        <a href="#tecnologia">Tecnología</a>
+        <a href="#validacion">Validación</a>
+        <a href="#casos">Casos de uso</a>
+        <a href="#integracion">Integración</a>
+        <a href="#contacto" class="nav-cta">Solicitar evaluación</a>
+      </nav>
+
+      <div class="lang-switcher" id="langSwitcher">
+        <button class="lang" type="button" aria-label="Seleccionar idioma" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu" id="langToggle">
+          <span>ES</span>
+          <span class="lang-caret" aria-hidden="true">⌄</span>
+        </button>
+        <div class="lang-menu" id="langMenu" hidden>
+          <a href="OrbitJk.html" class="active">
+            <span>Español</span>
+          </a>
+          <a href="OrbitJk-en.html">
+            <span>English</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="lang-switcher mobile-header" id="langSwitcherMobile">
+        <button class="lang" type="button" aria-label="Seleccionar idioma" aria-haspopup="true" aria-expanded="false" aria-controls="langMenuMobile" id="langToggleMobile">
+          <span>ES</span>
+          <span class="lang-caret" aria-hidden="true">⌄</span>
+        </button>
+        <div class="lang-menu" id="langMenuMobile" hidden>
+          <a href="OrbitJk.html" class="active">
+            <span>Español</span>
+          </a>
+          <a href="OrbitJk-en.html">
+            <span>English</span>
+          </a>
+        </div>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-backdrop" id="mobileBackdrop" hidden></div>
+  <div class="mobile-menu" id="mobileMenu" hidden>
+    <a href="#inicio">Inicio</a>
+    <a href="#panorama">Panorama actual</a>
+    <a href="#tecnologia">Tecnología</a>
+    <a href="#validacion">Validación</a>
+    <a href="#casos">Casos de uso</a>
+    <a href="#integracion">Integración</a>
+    <a href="#contacto" class="mobile-cta">Solicitar evaluación</a>
+  </div>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="inicio" class="hero">
+      <div class="hero-content">
+        <div class="hero-logo">Orbit<span>JK</span></div>
+
+        <div class="eyebrow">Predicción orbital · Inteligencia accionable</div>
+
+        <p class="hero-sub">
+          ORBIT JK transforma telemetría orbital observable en predicciones más claras,
+          auditables y accionables para reducir incertidumbre en decisiones críticas.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#contacto" class="btn btn-primary">Solicitar evaluación</a>
+          <a href="#tecnologia" class="btn btn-secondary">Conocer la tecnología</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANORAMA -->
+    <section id="panorama" class="section section-dark">
+      <div class="split">
+        <div class="split-image"></div>
+
+        <div class="split-text container">
+          <h2 class="blue-text">
+            La incertidumbre orbital sigue siendo uno de los mayores desafíos del sector espacial
+          </h2>
+
+          <p>
+            Cada año, miles de objetos atraviesan las últimas etapas de su vida orbital.
+            Sin embargo, determinar con precisión cuándo y dónde ocurrirá una reentrada
+            atmosférica continúa siendo una tarea compleja incluso para infraestructuras
+            de seguimiento avanzadas.
+          </p>
+
+          <p>
+            Las decisiones críticas siguen dependiendo de predicciones sujetas a márgenes
+            de incertidumbre que pueden comprometer operaciones, recursos y estrategias.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark">
+      <div class="container">
+        <h2 class="problem-title">Un entorno orbital cada vez más complejo</h2>
+
+        <p style="max-width: 760px;">
+          La actividad espacial atraviesa una etapa de crecimiento sin precedentes.
+          Nuevas constelaciones, satélites comerciales, misiones científicas y objetos
+          en desuso comparten un entorno orbital cada vez más congestionado.
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <h3>Más satélites en operación</h3>
+            <p>El crecimiento de constelaciones aumenta la necesidad de comprender trayectorias y riesgos.</p>
+          </div>
+
+          <div class="card">
+            <h3>Más objetos en LEO</h3>
+            <p>La órbita terrestre baja concentra activos operativos, objetos en desuso y fragmentos orbitales.</p>
+          </div>
+
+          <div class="card">
+            <h3>Más eventos de reentrada</h3>
+            <p>El aumento de objetos incrementa la necesidad de predicciones claras y oportunas.</p>
+          </div>
+        </div>
+
+        <div class="two-col-text">
+          <h2 class="big-statement">
+            Todo objeto en órbita terrestre baja está sujeto a los efectos acumulativos de la atmósfera.
+          </h2>
+
+          <div>
+            <p>
+              La verdadera dificultad no consiste únicamente en determinar si un objeto reingresará,
+              sino en comprender con suficiente precisión cuándo sucederá, cómo evolucionará su
+              trayectoria y qué nivel de confianza puede atribuirse a esa predicción.
+            </p>
+
+            <p style="margin-top: 26px;">
+              Pequeñas diferencias temporales pueden representar miles de kilómetros de variación
+              sobre la superficie terrestre.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEMS -->
+    <section class="section section-dark">
+      <div class="container" style="text-align:center;">
+        <h2>La dependencia de modelos altamente variables</h2>
+
+        <p style="max-width: 760px; margin: 34px auto 0;">
+          Gran parte de la predicción orbital moderna continúa dependiendo de modelos capaces
+          de estimar el comportamiento atmosférico y espacial a partir de múltiples variables dinámicas.
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <h3 class="blue-text">Actividad solar</h3>
+            <p>Las variaciones solares pueden modificar significativamente el comportamiento de la atmósfera superior.</p>
+          </div>
+
+          <div class="card">
+            <h3 class="blue-text">Densidad atmosférica</h3>
+            <p>Pequeñas diferencias en la densidad proyectada generan cambios acumulativos sobre la trayectoria orbital.</p>
+          </div>
+
+          <div class="card">
+            <h3 class="blue-text">Condiciones geomagnéticas</h3>
+            <p>La interacción entre factores ambientales puede introducir nuevos niveles de incertidumbre.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECHNOLOGY -->
+    <section id="tecnologia" class="section section-light">
+      <div class="container">
+        <div class="tech-intro">
+          <h2 class="blue-text">Un enfoque construido sobre evidencia observable</h2>
+
+          <p style="margin-top: 30px;">
+            ORBIT JK fue desarrollado para reducir dependencias innecesarias y centrar
+            el análisis en aquello que realmente puede verificarse: el comportamiento
+            orbital observado.
+          </p>
+
+          <p style="margin-top: 24px;">
+            En lugar de proyectar escenarios altamente condicionados por modelos externos,
+            la plataforma interpreta dinámicas reales para construir estimaciones más
+            consistentes, auditables y operativamente útiles.
+          </p>
+        </div>
+
+        <div class="cards four">
+          <div class="card">
+            <h3>Arquitectura Data-Driven</h3>
+            <p>Interpreta directamente la dinámica observable del objeto.</p>
+          </div>
+
+          <div class="card">
+            <h3>Compatibilidad Universal</h3>
+            <p>Se integra con múltiples estándares orbitales y fuentes de telemetría.</p>
+          </div>
+
+          <div class="card">
+            <h3>Robustez Operativa</h3>
+            <p>Deduce condiciones ambientales desde la evolución orbital observada.</p>
+          </div>
+
+          <div class="card">
+            <h3>Precisión Escalable</h3>
+            <p>Mayor calidad de observación se traduce en mejores capacidades predictivas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-navy">
+      <div class="container">
+        <h2>Compatibilidad con datos orbitales</h2>
+
+        <p style="max-width: 760px; margin-top: 30px;">
+          ORBIT JK puede integrarse con fuentes de datos utilizadas en entornos
+          operativos, retrospectivos y de análisis técnico.
+        </p>
+
+        <div class="data-list">
+          <div class="data-item">TLE</div>
+          <div class="data-item">OMM</div>
+          <div class="data-item">OEM</div>
+          <div class="data-item">SP3</div>
+          <div class="data-item">Telemetría histórica</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISUALIZATION -->
+    <section id="visualizacion" class="section section-navy">
+      <div class="container">
+        <div style="text-align:center; max-width: 980px; margin: 0 auto;">
+          <h2 class="blue-text">Visualización dinámica de incertidumbre orbital</h2>
+
+          <p style="margin-top: 30px;">
+            La incertidumbre orbital no es estática. ORBIT JK incorpora una representación
+            tridimensional diseñada para comprender cómo evoluciona el riesgo a lo largo del tiempo.
+          </p>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-row">
+            <h3>Expansión predictiva</h3>
+            <p>Las trayectorias posibles evolucionan dinámicamente conforme el horizonte temporal se amplía.</p>
+          </div>
+
+          <div class="timeline-row">
+            <h3>Punto TIR</h3>
+            <p>Identificación del momento en que el comportamiento dinámico alcanza una condición irreversible.</p>
+          </div>
+
+          <div class="timeline-row">
+            <h3>Colapso terminal</h3>
+            <p>La incertidumbre converge progresivamente hacia la ubicación final estimada.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALIDATION -->
+    <section id="validacion" class="section section-light">
+      <div class="container">
+        <h2>La precisión debe demostrarse, no asumirse</h2>
+
+        <div class="validation-grid">
+          <div>
+            <p style="margin-top: 30px;">
+              ORBIT JK fue evaluado bajo escenarios diseñados para replicar condiciones
+              operativas reales. Las pruebas utilizaron únicamente información disponible
+              antes de cada evento de reentrada, eliminando ventajas retrospectivas.
+            </p>
+
+            <p style="margin-top: 24px;">
+              La metodología completa de validación está disponible bajo solicitud
+              para organizaciones calificadas.
+            </p>
+          </div>
+
+          <div class="metric-box">
+            <div class="metric">
+              <span>Tipo de prueba</span>
+              <strong>Blind Test</strong>
+            </div>
+
+            <div class="metric">
+              <span>Eventos evaluados</span>
+              <strong>11</strong>
+            </div>
+
+            <div class="metric">
+              <span>Horizonte truncado</span>
+              <strong>48–72 h</strong>
+            </div>
+
+            <div class="metric">
+              <span>Referencia</span>
+              <strong>CSpOC</strong>
+            </div>
+
+            <div class="metric">
+              <span>Resultado</span>
+              <strong>Error mediano de un solo dígito horario</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- USE CASES -->
+    <section id="casos" class="section section-navy">
+      <div class="container">
+        <div class="use-title">
+          <h2><span class="blue-text">Inteligencia orbital</span> llevada a decisiones reales</h2>
+
+          <p>
+            La capacidad de comprender con mayor precisión la evolución orbital permite
+            construir nuevas herramientas de gestión de riesgo, monitoreo estratégico y análisis operacional.
+          </p>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <h3>Seguros Aeroespaciales</h3>
+            <p>Modelos de cobertura respaldados por eventos observables, criterios verificables y triggers auditables.</p>
+          </div>
+
+          <div class="card">
+            <h3>Infraestructura Crítica</h3>
+            <p>Evaluación temprana de posibles riesgos sobre activos estratégicos y zonas sensibles.</p>
+          </div>
+
+          <div class="card">
+            <h3>Defensa y SDA</h3>
+            <p>Detección de actividad orbital anómala con razonamiento transparente y auditable.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTEGRATION -->
+    <section id="integracion" class="section section-light">
+      <div class="container">
+        <div class="tech-intro">
+          <h2 class="blue-text">Evaluación e integración estratégica</h2>
+
+          <p style="margin-top: 30px;">
+            Cada organización enfrenta un contexto orbital, operativo y comercial distinto.
+            Por ello, ORBIT JK no parte de una modalidad única de comercialización.
+            Primero analizamos el caso, el nivel de necesidad, el entorno técnico y el valor
+            estratégico que la tecnología puede aportar.
+          </p>
+
+          <p style="margin-top: 24px;">
+            A partir de esa evaluación, se define la estructura más adecuada para la colaboración:
+            integración tecnológica, licencia, piloto controlado, desarrollo conjunto u otro
+            esquema comercial compatible con los objetivos de ambas partes.
+          </p>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <h3>Diagnóstico técnico</h3>
+            <p>
+              Analizamos el caso de uso, fuentes de datos disponibles, restricciones operativas,
+              entorno de integración, objetivos institucionales y nivel de criticidad.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Piloto controlado</h3>
+            <p>
+              Evaluamos precisión, trazabilidad, estabilidad, calidad de entrada, desempeño
+              predictivo y utilidad operativa bajo un entorno definido.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Modelo de colaboración</h3>
+            <p>
+              Definimos la vía comercial adecuada según el alcance requerido: licencia,
+              integración, desarrollo conjunto, despliegue especializado o negociación estratégica.
+            </p>
+          </div>
+        </div>
+
+        <p style="max-width: 820px; margin-top: 50px; color: rgba(7,20,38,0.72);">
+          La divulgación técnica avanzada se realiza de forma progresiva, bajo criterios de
+          confidencialidad, mínima información necesaria y trazabilidad documental.
+        </p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta">
+      <div class="container">
+        <h2>La próxima generación de inteligencia orbital, validada en pruebas retrospectivas a ciegas</h2>
+
+        <p>
+          Las decisiones más importantes no deberían depender únicamente de estimaciones inciertas.
+          Solicite acceso al whitepaper o una evaluación técnica de ORBIT JK, basada en
+          validación retrospectiva y blind tests sobre eventos históricos.
+        </p>
+
+        <a href="#contacto" class="btn btn-primary">Solicitar acceso</a>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contacto" class="section section-dark">
+      <div class="container contact-wrap">
+        <div>
+          <h2>Solicitar evaluación</h2>
+
+          <p style="margin-top: 30px;">
+            Para solicitar acceso al whitepaper público de ORBIT JK v20.1, iniciar una
+            evaluación técnica o explorar una posible colaboración estratégica, complete el
+            formulario. Revisaremos su solicitud según el caso de uso, el perfil institucional
+            y el nivel de información requerido.
+          </p>
+
+          <p style="margin-top: 24px;">
+            ORBIT JK evalúa cada oportunidad de forma individual. Las alternativas de
+            colaboración pueden incluir integración tecnológica, licenciamiento, piloto
+            controlado, desarrollo conjunto u otras estructuras comerciales, según las
+            necesidades del comprador y el alcance estratégico de la tecnología.
+          </p>
+
+          <p style="margin-top: 24px;">
+            La información técnica sensible se comparte únicamente bajo divulgación progresiva,
+            mínima información necesaria y, cuando aplique, acuerdos de confidencialidad.
+          </p>
+
+          <p style="margin-top: 30px;">
+            Puebla, México<br />
+            +52 222 964 8206
+          </p>
+        </div>
+
+        <form>
+          <input type="text" placeholder="Nombre" required />
+          <input type="email" placeholder="Email corporativo" required />
+          <input type="text" placeholder="Organización" />
+          <input type="text" placeholder="Cargo" />
+
+          <select required>
+            <option value="">Interés principal</option>
+            <option>Reentrada orbital</option>
+            <option>SDA / Defensa</option>
+            <option>Seguros aeroespaciales</option>
+            <option>Infraestructura crítica</option>
+            <option>Investigación / Otro</option>
+          </select>
+
+          <textarea placeholder="Mensaje"></textarea>
+
+          <button type="submit" class="btn btn-primary">Enviar solicitud</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <div class="logo">Orbit<span>JK</span></div>
+
+        <p style="margin-top: 24px;">
+          Predicción orbital · Inteligencia accionable
+        </p>
+
+        <p style="margin-top: 24px;">
+          Contacto<br />
+          +52 222 964 8206<br />
+          Puebla, México
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#inicio">Inicio</a>
+        <a href="#panorama">Panorama actual</a>
+        <a href="#tecnologia">Nuestra tecnología</a>
+        <a href="#validacion">Validación</a>
+        <a href="#casos">Casos de uso</a>
+        <a href="#integracion">Integración</a>
+        <a href="#contacto">Contacto</a>
+        <a href="privacidad.html">Privacidad</a>
+      </div>
+    </div>
+
+    <div class="container copyright">
+      © 2026 ORBIT JK. Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var toggle = document.getElementById("navToggle");
+      var menu = document.getElementById("mobileMenu");
+      var backdrop = document.getElementById("mobileBackdrop");
+      if (!toggle || !menu || !backdrop) return;
+
+      function setOpen(open) {
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        menu.hidden = !open;
+        backdrop.hidden = !open;
+        document.body.classList.toggle("menu-open", open);
+      }
+
+      toggle.addEventListener("click", function () {
+        setOpen(menu.hidden);
+      });
+
+      backdrop.addEventListener("click", function () {
+        setOpen(false);
+      });
+
+      menu.addEventListener("click", function (event) {
+        var link = event.target.closest("a");
+        if (!link) return;
+        setOpen(false);
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") setOpen(false);
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 960) setOpen(false);
+      });
+    })();
+
+    (function () {
+      function initLang(switcherId, toggleId, menuId) {
+        var switcher = document.getElementById(switcherId);
+        var toggle = document.getElementById(toggleId);
+        var menu = document.getElementById(menuId);
+        if (!switcher || !toggle || !menu) return;
+
+        function close() {
+          menu.hidden = true;
+          switcher.classList.remove("open");
+          toggle.setAttribute("aria-expanded", "false");
+        }
+
+        function open() {
+          menu.hidden = false;
+          switcher.classList.add("open");
+          toggle.setAttribute("aria-expanded", "true");
+        }
+
+        toggle.addEventListener("click", function (event) {
+          event.stopPropagation();
+          if (menu.hidden) open();
+          else close();
+        });
+
+        document.addEventListener("click", function (event) {
+          if (!switcher.contains(event.target)) close();
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") close();
+        });
+      }
+
+      initLang("langSwitcher", "langToggle", "langMenu");
+      initLang("langSwitcherMobile", "langToggleMobile", "langMenuMobile");
+    })();
+
+    const form = document.querySelector("form");
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      alert("Solicitud enviada. Gracias por contactar a ORBIT JK.");
+      form.reset();
+    });
+  </script>
+
+</body>
+</html>
