@@ -134,14 +134,15 @@
     }
 
     .logo {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.06em;
+      display: inline-flex;
+      align-items: center;
       flex: 0 0 auto;
     }
 
-    .logo span {
-      color: var(--blue);
+    .logo img {
+      display: block;
+      height: 46px;
+      width: auto;
     }
 
     .nav-links {
@@ -579,6 +580,10 @@
       .legal-lead {
         font-size: 17px;
       }
+
+      .logo img {
+        height: 38px;
+      }
     }
   </style>
 </head>
@@ -586,7 +591,9 @@
 
   <header>
     <div class="container nav">
-      <a href="index-EN.html" class="logo">Orbit<span>JK</span></a>
+      <a href="index-EN.html" class="logo">
+        <img src="Orbit JK_Logotipo (1).png" alt="ORBIT JK" />
+      </a>
 
       <nav class="nav-links">
         <a href="index-EN.html#home">Home</a>
@@ -859,7 +866,9 @@
   <footer>
     <div class="container footer-grid">
       <div>
-        <div class="logo">Orbit<span>JK</span></div>
+        <div class="logo">
+          <img src="Orbit JK_Logotipo (1).png" alt="ORBIT JK" />
+        </div>
 
         <p style="margin-top: 24px;">
           Orbital Prediction · Actionable Intelligence

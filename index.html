@@ -165,13 +165,15 @@
     }
 
     .logo {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.06em;
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
     }
 
-    .logo span {
-      color: var(--blue);
+    .logo img {
+      display: block;
+      height: 46px;
+      width: auto;
     }
 
     .nav-links {
@@ -367,14 +369,14 @@
     }
 
     .hero-logo {
-      font-size: clamp(64px, 10vw, 150px);
-      font-weight: 900;
-      letter-spacing: -0.08em;
       margin-bottom: 18px;
     }
 
-    .hero-logo span {
-      color: var(--blue);
+    .hero-logo img {
+      display: block;
+      width: min(960px, 100%);
+      height: auto;
+      margin: 0 auto;
     }
 
     .hero-sub {
@@ -827,6 +829,10 @@
       .section {
         padding: 90px 0;
       }
+
+      .logo img {
+        height: 38px;
+      }
     }
   </style>
 </head>
@@ -835,7 +841,9 @@
 
   <header>
     <div class="container nav">
-      <a href="#inicio" class="logo">Orbit<span>JK</span></a>
+      <a href="#inicio" class="logo">
+        <img src="Orbit JK_Logotipo (1).png" alt="ORBIT JK" />
+      </a>
 
       <nav class="nav-links">
         <a href="#inicio">Inicio</a>
@@ -899,7 +907,9 @@
     <!-- HERO -->
     <section id="inicio" class="hero">
       <div class="hero-content">
-        <div class="hero-logo">Orbit<span>JK</span></div>
+        <div class="hero-logo">
+          <img src="Orbit JK_Logotipo (1).png" alt="ORBIT JK" />
+        </div>
 
         <div class="eyebrow">Predicción orbital · Inteligencia accionable</div>
 
@@ -1393,7 +1403,9 @@
   <footer>
     <div class="container footer-grid">
       <div>
-        <div class="logo">Orbit<span>JK</span></div>
+        <div class="logo">
+          <img src="Orbit JK_Logotipo (1).png" alt="ORBIT JK" />
+        </div>
 
         <p style="margin-top: 24px;">
           Predicción orbital · Inteligencia accionable
