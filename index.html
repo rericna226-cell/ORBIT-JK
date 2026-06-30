@@ -853,10 +853,10 @@
           <span class="lang-caret" aria-hidden="true">⌄</span>
         </button>
         <div class="lang-menu" id="langMenu" hidden>
-          <a href="OrbitJk.html" class="active">
+          <a href="index.html" class="active">
             <span>Español</span>
           </a>
-          <a href="OrbitJk-en.html">
+          <a href="index-EN.html">
             <span>English</span>
           </a>
         </div>
@@ -868,10 +868,10 @@
           <span class="lang-caret" aria-hidden="true">⌄</span>
         </button>
         <div class="lang-menu" id="langMenuMobile" hidden>
-          <a href="OrbitJk.html" class="active">
+          <a href="index.html" class="active">
             <span>Español</span>
           </a>
-          <a href="OrbitJk-en.html">
+          <a href="index-EN.html">
             <span>English</span>
           </a>
         </div>
@@ -1381,8 +1381,7 @@
             </div>
 
             <div class="form-note">
-              El formulario valida tu solicitud y deja listo el siguiente paso para integrarlo
-              con el canal oficial de contacto de ORBIT JK.
+              El formulario prepara un correo dirigido a info@orbitjk.com con tu solicitud.
             </div>
           </form>
         </div>
@@ -1502,15 +1501,52 @@
     (function () {
       var form = document.getElementById("contact-form");
       var status = document.getElementById("contact-status");
+      var interestField = document.getElementById("contact-interest");
+      var sectorField = document.getElementById("contact-sector");
 
-      if (!form) return;
+      if (!form || !interestField || !sectorField) return;
+
+      var subjects = {
+        whitepaper: "Acceso a whitepaper - ORBIT JK",
+        evaluacion: "Evaluacion tecnica - ORBIT JK",
+        integracion: "Explorar integracion - ORBIT JK",
+        licenciamiento: "Explorar licenciamiento - ORBIT JK",
+        colaboracion: "Colaboracion estrategica - ORBIT JK",
+        otro: "Consulta estrategica - ORBIT JK"
+      };
 
       form.addEventListener("submit", function (event) {
         event.preventDefault();
 
+        var formData = new FormData(form);
+        var selectedInterest = interestField.options[interestField.selectedIndex];
+        var selectedSector = sectorField.options[sectorField.selectedIndex];
+        var interestLabel = selectedInterest ? selectedInterest.text : "";
+        var sectorLabel = selectedSector ? selectedSector.text : "";
+        var interestValue = formData.get("interest");
+        var subject = subjects[interestValue] || "Consulta estrategica - ORBIT JK";
+        var body = [
+          "Nombre: " + (formData.get("name") || ""),
+          "Organizacion: " + (formData.get("company") || ""),
+          "Email: " + (formData.get("email") || ""),
+          "Telefono: " + (formData.get("phone") || ""),
+          "Sector: " + sectorLabel,
+          "Interes: " + interestLabel,
+          "Aviso de privacidad: Aceptado",
+          "",
+          "Mensaje:",
+          formData.get("message") || ""
+        ].join("\n");
+
         if (status) {
-          status.textContent = "Solicitud preparada. Falta conectar el canal final de envío.";
+          status.textContent = "Abriendo tu cliente de correo...";
         }
+
+        window.location.href =
+          "mailto:info@orbitjk.com?subject=" +
+          encodeURIComponent(subject) +
+          "&body=" +
+          encodeURIComponent(body);
 
         form.reset();
       });
