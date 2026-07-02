@@ -936,6 +936,87 @@
     })();
 
     (function () {
+      var LANG_SCROLL_KEY = "orbitjk-lang-scroll";
+      var HASH_EQUIVALENTS = {
+        "#inicio": "#home",
+        "#home": "#inicio",
+        "#tecnologia": "#technology",
+        "#technology": "#tecnologia",
+        "#validacion": "#validation",
+        "#validation": "#validacion",
+        "#casos": "#use-cases",
+        "#use-cases": "#casos",
+        "#contacto": "#contact",
+        "#contact": "#contacto",
+        "#visualizacion": "#visualization",
+        "#visualization": "#visualizacion",
+        "#responsable": "#controller",
+        "#controller": "#responsable",
+        "#datos": "#data",
+        "#data": "#datos",
+        "#finalidades": "#purposes",
+        "#purposes": "#finalidades",
+        "#consentimiento": "#consent",
+        "#consent": "#consentimiento",
+        "#transferencias": "#transfers",
+        "#transfers": "#transferencias",
+        "#arco": "#rights",
+        "#rights": "#arco",
+        "#limitar": "#limit",
+        "#limit": "#limitar",
+        "#cambios": "#changes",
+        "#changes": "#cambios",
+        "#autoridad": "#authority",
+        "#authority": "#autoridad"
+      };
+
+      function normalizePath(path) {
+        return (path || "/").replace(/\/+$/, "") || "/";
+      }
+
+      function resolveTargetHash(hash) {
+        return HASH_EQUIVALENTS[hash] || hash;
+      }
+
+      function saveScrollPosition(targetUrl) {
+        sessionStorage.setItem(
+          LANG_SCROLL_KEY,
+          JSON.stringify({
+            path: normalizePath(targetUrl.pathname),
+            search: targetUrl.search || "",
+            scrollY: Math.max(0, Math.round(window.scrollY || window.pageYOffset || 0))
+          })
+        );
+      }
+
+      function restoreScrollPosition() {
+        var storedValue;
+        var storedState;
+
+        if (window.location.hash) return;
+
+        storedValue = sessionStorage.getItem(LANG_SCROLL_KEY);
+        if (!storedValue) return;
+
+        sessionStorage.removeItem(LANG_SCROLL_KEY);
+
+        try {
+          storedState = JSON.parse(storedValue);
+        } catch (error) {
+          return;
+        }
+
+        if (!storedState || typeof storedState.scrollY !== "number") return;
+        if (normalizePath(window.location.pathname) !== storedState.path) return;
+        if ((window.location.search || "") !== (storedState.search || "")) return;
+
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            window.scrollTo(0, storedState.scrollY);
+          });
+        });
+      }
+
       function initLang(switcherId, toggleId, menuId) {
         var switcher = document.getElementById(switcherId);
         var toggle = document.getElementById(toggleId);
@@ -960,6 +1041,38 @@
           else close();
         });
 
+        menu.addEventListener("click", function (event) {
+          var link = event.target.closest("a");
+          var currentHash = window.location.hash;
+          var targetUrl;
+
+          if (!link) return;
+
+          targetUrl = new URL(link.href, window.location.href);
+
+          if (
+            normalizePath(targetUrl.pathname) === normalizePath(window.location.pathname) &&
+            (targetUrl.search || "") === (window.location.search || "")
+          ) {
+            event.preventDefault();
+            close();
+            return;
+          }
+
+          if (currentHash) {
+            event.preventDefault();
+            close();
+            targetUrl.hash = resolveTargetHash(currentHash);
+            window.location.href = targetUrl.toString();
+            return;
+          }
+
+          event.preventDefault();
+          close();
+          saveScrollPosition(targetUrl);
+          window.location.href = targetUrl.toString();
+        });
+
         document.addEventListener("click", function (event) {
           if (!switcher.contains(event.target)) close();
         });
@@ -969,6 +1082,7 @@
         });
       }
 
+      restoreScrollPosition();
       initLang("langSwitcher", "langToggle", "langMenu");
       initLang("langSwitcherMobile", "langToggleMobile", "langMenuMobile");
     })();
