@@ -626,117 +626,79 @@
       margin-bottom: 22px;
     }
 
-    .contact-form {
-      display: grid;
-      gap: 14px;
+    .contact-label {
+      display: block;
+      margin-bottom: 14px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(7,20,38,0.62);
     }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .field {
-      display: grid;
-      gap: 8px;
-    }
-
-    .field label {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--navy);
-      letter-spacing: 0.02em;
-    }
-
-    .field input,
-    .field select,
-    .field textarea {
-      width: 100%;
-      border: 1px solid rgba(7,20,38,0.14);
-      border-radius: 16px;
-      background: #fff;
-      color: var(--navy);
-      padding: 14px 15px;
-      font: inherit;
-      font-size: 16px;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus {
-      border-color: rgba(15,92,255,0.65);
-      box-shadow: 0 0 0 4px rgba(15,92,255,0.12);
-    }
-
-    .field input::placeholder,
-    .field textarea::placeholder {
-      color: rgba(7,20,38,0.42);
-    }
-
-    .field select {
-      color: rgba(7,20,38,0.88);
-    }
-
-    .field textarea {
-      min-height: 150px;
-      resize: vertical;
-    }
-
-    .form-consent {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      font-size: 13px;
+    .contact-list {
+      margin: 0 0 24px;
+      padding-left: 20px;
       color: rgba(7,20,38,0.78);
-      line-height: 1.45;
-      margin-top: 6px;
     }
 
-    .form-consent input {
-      width: auto;
-      margin-top: 3px;
-      accent-color: var(--blue);
+    .contact-list li {
+      margin-bottom: 10px;
     }
 
-    .form-consent a {
+    .contact-email-label {
+      max-width: none;
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: rgba(7,20,38,0.62);
+    }
+
+    .contact-email {
+      display: block;
+      margin-bottom: 24px;
+      font-size: 18px;
+      font-weight: 800;
       color: var(--navy);
-      text-decoration: underline;
-      text-underline-offset: 3px;
+      text-decoration: none;
     }
 
-    .form-actions {
-      display: flex;
+    .contact-email:hover {
+      color: var(--blue);
+    }
+
+    .contact-button {
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
-    .cta-form-card .btn-primary {
+      justify-content: center;
+      padding: 14px 22px;
+      border-radius: 999px;
+      border: 1px solid var(--navy);
       background: var(--navy);
       color: var(--white);
-      border-color: var(--navy);
+      font-weight: 800;
+      text-decoration: none;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     }
 
-    .cta-form-card .btn-primary:hover {
+    .contact-button:hover {
       background: var(--blue);
       border-color: var(--blue);
       color: var(--white);
+      transform: translateY(-1px);
     }
 
-    .form-status {
+    .contact-note {
+      max-width: none;
+      margin: 18px 0 0;
       font-size: 13px;
-      font-weight: 600;
-      color: rgba(7,20,38,0.68);
-    }
-
-    .form-note {
-      font-size: 13px;
+      line-height: 1.55;
       color: rgba(7,20,38,0.62);
-      margin-top: 4px;
+    }
+
+    .contact-note a {
+      color: var(--navy);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     footer {
@@ -799,10 +761,6 @@
         grid-template-columns: 1fr;
       }
 
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
       #technology .cards.four {
         grid-template-columns: 1fr;
         gap: 22px;
@@ -824,6 +782,10 @@
 
       .logo img {
         height: 38px;
+      }
+
+      .contact-button {
+        width: 100%;
       }
     }
   </style>
@@ -1289,98 +1251,26 @@
         <div class="cta-form-card">
           <h3>Request Strategic Information</h3>
           <p>
-            Complete the form and we will prepare the right conversation for technical
-            evaluation, validation, integration, licensing or institutional collaboration.
+            Briefly share your case and we will prepare the right conversation for technical
+            evaluation, validation, integration, licensing, or institutional collaboration.
           </p>
+          <span class="contact-label">Include in your message</span>
+          <ul class="contact-list">
+            <li>Name</li>
+            <li>Organization</li>
+            <li>Sector</li>
+            <li>Interest</li>
+            <li>Evaluation objective</li>
+            <li>Contact phone (optional)</li>
+            <li>Email</li>
+          </ul>
 
-          <form class="contact-form" id="contact-form">
-            <div class="form-row">
-              <div class="field">
-                <label for="contact-name">Name</label>
-                <input id="contact-name" name="name" autocomplete="name" required />
-              </div>
+          <p class="contact-email-label">You can also write to us directly at</p>
+          <a class="contact-email" href="mailto:info@orbitjk.com">info@orbitjk.com</a>
 
-              <div class="field">
-                <label for="contact-company">Organization</label>
-                <input id="contact-company" name="company" autocomplete="organization" required />
-              </div>
-            </div>
+          <a class="contact-button" href="mailto:info@orbitjk.com?subject=Evaluation%20Request%20-%20ORBIT%20JK&body=Name%3A%0D%0AOrganization%3A%0D%0ASector%3A%0D%0AInterest%3A%0D%0APhone%3A%0D%0AEmail%3A%0D%0A%0D%0AEvaluation%20objective%3A%0D%0A%0D%0AUse%20case%20or%20operational%20context%3A%0D%0A">Request evaluation</a>
 
-            <div class="form-row">
-              <div class="field">
-                <label for="contact-email">Email</label>
-                <input id="contact-email" name="email" type="email" autocomplete="email" required />
-              </div>
-
-              <div class="field">
-                <label for="contact-phone">Phone</label>
-                <input
-                  id="contact-phone"
-                  name="phone"
-                  type="tel"
-                  autocomplete="tel"
-                  placeholder="+__"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="field">
-                <label for="contact-sector">Sector</label>
-                <select id="contact-sector" name="sector" required>
-                  <option value="" selected disabled>Select an option</option>
-                  <option value="space">Space Operator / Satellite</option>
-                  <option value="defense">Defense / SDA</option>
-                  <option value="insurance">Aerospace Insurance</option>
-                  <option value="infrastructure">Critical Infrastructure</option>
-                  <option value="government">Government / Regulation</option>
-                  <option value="research">Research / Academia</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="contact-interest">Interest</label>
-                <select id="contact-interest" name="interest" required>
-                  <option value="" selected disabled>Select an option</option>
-                  <option value="whitepaper">Whitepaper Access</option>
-                  <option value="evaluation">Technical Evaluation</option>
-                  <option value="integration">Explore Integration</option>
-                  <option value="licensing">Explore Licensing</option>
-                  <option value="collaboration">Strategic Collaboration</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="contact-message">Message</label>
-              <textarea
-                id="contact-message"
-                name="message"
-                required
-                placeholder="Share your use case, evaluation horizon, organization type or the level of technical access you need."
-              ></textarea>
-            </div>
-
-            <div class="form-consent">
-              <input id="contact-privacy" name="privacy" type="checkbox" value="accepted" required />
-              <label for="contact-privacy">
-                I have read and accept the <a href="/privacy-en">privacy notice</a> and authorize
-                the processing of my data for follow-up related to this request.
-              </label>
-            </div>
-
-            <div class="form-actions">
-              <button type="submit" class="btn btn-primary">Send Request</button>
-              <span class="form-status" id="contact-status" aria-live="polite"></span>
-            </div>
-
-            <div class="form-note">
-              The form prepares an email addressed to info@orbitjk.com with your request.
-            </div>
-          </form>
+          <p class="contact-note">By contacting us via email, you agree that we may process the personal data you provide in accordance with our <a href="/privacy-en">privacy notice</a>.</p>
         </div>
       </div>
     </section>
@@ -1611,59 +1501,6 @@
       initLang("langSwitcherMobile", "langToggleMobile", "langMenuMobile");
     })();
 
-    (function () {
-      var form = document.getElementById("contact-form");
-      var status = document.getElementById("contact-status");
-      var interestField = document.getElementById("contact-interest");
-      var sectorField = document.getElementById("contact-sector");
-
-      if (!form || !interestField || !sectorField) return;
-
-      var subjects = {
-        whitepaper: "Whitepaper Access - ORBIT JK",
-        evaluation: "Technical Evaluation - ORBIT JK",
-        integration: "Explore Integration - ORBIT JK",
-        licensing: "Explore Licensing - ORBIT JK",
-        collaboration: "Strategic Collaboration - ORBIT JK",
-        other: "Strategic Inquiry - ORBIT JK"
-      };
-
-      form.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        var formData = new FormData(form);
-        var selectedInterest = interestField.options[interestField.selectedIndex];
-        var selectedSector = sectorField.options[sectorField.selectedIndex];
-        var interestLabel = selectedInterest ? selectedInterest.text : "";
-        var sectorLabel = selectedSector ? selectedSector.text : "";
-        var interestValue = formData.get("interest");
-        var subject = subjects[interestValue] || "Strategic Inquiry - ORBIT JK";
-        var body = [
-          "Name: " + (formData.get("name") || ""),
-          "Organization: " + (formData.get("company") || ""),
-          "Email: " + (formData.get("email") || ""),
-          "Phone: " + (formData.get("phone") || ""),
-          "Sector: " + sectorLabel,
-          "Interest: " + interestLabel,
-          "Privacy Notice: Accepted",
-          "",
-          "Message:",
-          formData.get("message") || ""
-        ].join("\n");
-
-        if (status) {
-          status.textContent = "Opening your email client...";
-        }
-
-        window.location.href =
-          "mailto:info@orbitjk.com?subject=" +
-          encodeURIComponent(subject) +
-          "&body=" +
-          encodeURIComponent(body);
-
-        form.reset();
-      });
-    })();
   </script>
 
 </body>
